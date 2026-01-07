@@ -61,8 +61,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     { href: "/app/calendar", label: "カレンダー" },
     { href: "/app/search", label: "検索" },
     { href: "/app/customers", label: "顧客" },
-    { href: "/app/availability", label: "空き枠設定" },
-    { href: "/app/share", label: "共有URL" },
+    { href: "/app/stats", label: "統計" },
+    { href: "/app/availability", label: "設定" },
+    { href: "/app/share", label: "共有" },
   ];
 
   return (
