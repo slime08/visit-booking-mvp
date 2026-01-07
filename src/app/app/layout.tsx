@@ -59,6 +59,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   const navItems = [
     { href: "/app/calendar", label: "カレンダー" },
+    { href: "/app/availability", label: "空き枠設定" },
     { href: "/app/share", label: "共有URL" },
   ];
 

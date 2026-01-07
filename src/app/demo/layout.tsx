@@ -8,6 +8,7 @@ export default function DemoLayout({ children }: { children: React.ReactNode }) 
 
   const navItems = [
     { href: "/demo/calendar", label: "カレンダー" },
+    { href: "/demo/availability", label: "空き枠設定" },
     { href: "/demo/share", label: "共有URL" },
   ];
 
