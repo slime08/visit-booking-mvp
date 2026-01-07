@@ -8,7 +8,7 @@ export default function Home() {
         <div className="max-w-4xl mx-auto flex justify-between items-center">
           <h1 className="text-xl font-bold text-gray-900">訪問予約管理</h1>
           <Link
-            href="/login"
+            href="/demo/calendar"
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium"
           >
             ログイン
@@ -30,10 +30,10 @@ export default function Home() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
-                href="/login"
+                href="/demo/calendar"
                 className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
               >
-                管理画面を試す
+                デモを試す（ログイン不要）
               </Link>
               <Link
                 href="/s/demo"
