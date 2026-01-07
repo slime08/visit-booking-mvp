@@ -1,0 +1,108 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+
+}
+
+// 事業者
+model Provider {
+  id        String   @id @default(uuid())
+  name      String
+  email     String?  // リマインド通知先
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  users             ProviderUser[]
+  appointments      Appointment[]
+  availabilityRules AvailabilityRule[]
+  shareLinks        ShareLink[]
+
+  @@map("providers")
+}
+
+// ログインユーザー
+model ProviderUser {
+  id           String   @id @default(uuid())
+  providerId   String   @map("provider_id")
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  name         String?
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  provider Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+
+  @@map("provider_users")
+}
+
+// 予約ステータス
+enum AppointmentStatus {
+  booked
+  canceled
+}
+
+// 予約
+model Appointment {
+  id            String            @id @default(uuid())
+  providerId    String            @map("provider_id")
+  customerName  String?           @map("customer_name")
+  customerPhone String?           @map("customer_phone")
+  notes         String?
+  startAt       DateTime          @map("start_at")
+  endAt         DateTime          @map("end_at")
+  status        AppointmentStatus @default(booked)
+  canceledAt    DateTime?         @map("canceled_at")
+  cancelReason  String?           @map("cancel_reason")
+  createdAt     DateTime          @default(now()) @map("created_at")
+  updatedAt     DateTime          @updatedAt @map("updated_at")
+
+  provider Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+
+  @@index([providerId, startAt])
+  @@index([providerId, status])
+  @@map("appointments")
+}
+
+// 空き枠ルール
+model AvailabilityRule {
+  id                  String   @id @default(uuid())
+  providerId          String   @map("provider_id")
+  weekday             Int      // 0=日, 1=月, ..., 6=土
+  startTime           String   @map("start_time") // "09:00"
+  endTime             String   @map("end_time")   // "18:00"
+  slotMinutes         Int      @default(60) @map("slot_minutes")
+  travelBufferMinutes Int      @default(30) @map("travel_buffer_minutes")
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  provider Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+
+  @@index([providerId, weekday])
+  @@map("availability_rules")
+}
+
+// 共有リンクのスコープ
+enum ShareLinkScope {
+  today
+  tomorrow
+  week
+}
+
+// 共有リンク
+model ShareLink {
+  id         String         @id @default(uuid())
+  providerId String         @map("provider_id")
+  token      String         @unique @default(uuid())
+  scope      ShareLinkScope @default(today)
+  expiresAt  DateTime?      @map("expires_at")
+  createdAt  DateTime       @default(now()) @map("created_at")
+
+  provider Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+  @@map("share_links")
+}
